@@ -1,0 +1,128 @@
+import React, { useState } from 'react';
+import surprise from '../assets/images/discover.jpg';
+import normal from '../assets/images/test.jpeg';
+import { motion, useMotionValue, useTransform, useAnimation } from 'framer-motion';
+
+const MatcherInputs = () => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isHolding, setIsHolding] = useState(false);
+  const [showContent, setShowContent] = useState(false);
+  const [mode, setMode] = useState('');
+
+  const handleStart = (e) => {
+    const posX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+    const posY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+    setStartPos({ x: posX, y: posY });
+    setIsHolding(true);
+  };
+
+  const handleMove = (e) => {
+    if (!isHolding) return;
+
+    const posX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+    const posY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+    const diffX = posX - startPos.x;
+    const diffY = posY - startPos.y;
+
+    if (!isDragging && (Math.abs(diffX) > 1 || Math.abs(diffY) > 1)) {
+      setIsDragging(true);
+    }
+
+    if (isDragging) {
+      setPosition({ x: diffX, y: diffY });
+    }
+  };
+
+  const handleEnd = () => {
+    if (isDragging && Math.abs(position.x) > 100) {
+      console.log(position.x > 0 ? 'Swiped right' : 'Swiped left');
+    }
+
+    setPosition({ x: 0, y: 0 });
+    setIsDragging(false);
+    setIsHolding(false);
+  };
+
+  const handleClick = (e) => {
+    setMode(e);
+    setShowContent(true);
+  };
+
+  const tiltAngle = (position.x / window.innerWidth) * 45; // Max degrees
+  const opacity = 1 - Math.abs(position.x) / 450; // Fade out after drag distance
+
+  return (
+    <div className="w-full h-full font-poppins">
+      {!showContent && (
+        <div className="w-full h-screen flex">
+          {/* Normal recommendations button */}
+          <button
+            className="w-1/2 h-full pb-[80px] text-[80px] relative overflow-hidden transition-all group"
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.8)', // Blue background color with opacity
+            }}
+            onClick={() => handleClick('normal')}
+          >
+            <span className="relative z-10 text-black transition-all group-hover:text-white after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[4px] after:bg-white after:w-full after:origin-center after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-700">
+              Match Me!</span>
+            <div
+              className="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+              style={{
+                backgroundImage: `url(${normal})`,
+              }}
+            ></div>
+          </button>
+
+          {/* Surprise me button */}
+          <button
+            className="w-1/2 h-full pb-[80px] text-[80px] relative overflow-hidden transition-all group"
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 1)', // Red background color with opacity
+            }}
+            onClick={() => handleClick('surprise')}
+          >
+            <span className="relative z-10 text-white transition-all group-hover:text-[#1E4A1C] after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[4px] after:bg-[#1E4A1C] after:w-full after:origin-center after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-700">
+              Surprise me!</span>
+            <div
+              className="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+              style={{
+                backgroundImage: `url(${surprise})`,
+              }}
+            ></div>
+          </button>
+        </div>
+      )}
+      {showContent && (
+        <section
+          className="w-1/2 pt-[50px] mx-auto h-auto border-4 border-red-500"
+          style={{
+            transform: `translateX(${position.x}px) rotate(${tiltAngle}deg)`,
+            transition: 'transform 0.5s linear, opacity 0.5s linear',
+            opacity: opacity > 0 ? opacity : 0,
+            touchAction: 'none',
+          }}
+          onMouseDown={handleStart}
+          onMouseMove={handleMove}
+          onMouseUp={handleEnd}
+          onMouseLeave={handleEnd}
+          onTouchStart={handleStart}
+          onTouchMove={handleMove}
+          onTouchEnd={handleEnd}
+        >
+          <div  style={{ pointerEvents: 'none' }}></div>
+          <div>MatcherInputs</div>
+          <img
+            src="https://m.media-amazon.com/images/I/91wn8rwvgTL._SY522_.jpg"
+            alt="Placeholder"
+            className="w-1/2 h-1/2"
+          />
+        </section>
+      )}
+    </div>
+  );
+};
+
+export default MatcherInputs;
