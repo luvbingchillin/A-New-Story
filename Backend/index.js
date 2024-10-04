@@ -118,8 +118,8 @@ app.post('/api/login', async (req,res)=>{
 
     const payload = {userId: user.id, userName: user.username };
     // create tokens that can be deconded to store id and username
-    const accessToken =  jwt.sign(payload, JWT_SECRET,{expiresIn:'1h'})
-    const refreshToken =  jwt.sign(payload, JWT_SECRET,{expiresIn:'7d'})
+    const accessToken =  jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:'1h'})
+    const refreshToken =  jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:'7d'})
     // refreshing api to be implemented later
     res.cookie('accessToken', accessToken,{
       httpOnly: true,
@@ -146,12 +146,12 @@ app.post('/api/login', async (req,res)=>{
 // update sql to add books, verifytoken runs
 app.post('/api/addtoBS',verifyToken, async(req,res)=>{
   try {
-    const {isbn_10, isbn_13, book_name,} = req.body;
+    const {isbn_10, isbn_13, book_name, author_name} = req.body;
     console.log('Request Body:', req.body);
     const user_uuid = req.userId;
     const result = await pool.query(
-      'INSERT INTO bookshelf (isbn_10, isbn_13, book_name, user_uuid) VALUES ($1,$2,$3,$4)',
-      [isbn_10, isbn_13, book_name, user_uuid]
+      'INSERT INTO bookshelf (isbn_10, isbn_13, book_name, user_uuid, author_name) VALUES ($1,$2,$3,$4,$5)',
+      [isbn_10, isbn_13, book_name, user_uuid, author_name]
     );
     return res.status(200).json({message:"Book added to bookshelf"})
   } catch (error) {
@@ -197,7 +197,7 @@ app.post('/api/logout', (req, res) => {
 
     // Fetch user's favorited books from the database
     const result = await pool.query(
-      'SELECT book_name, authors FROM bookshelf WHERE user_uuid = $1', [userId]
+      'SELECT book_name, author_name FROM bookshelf WHERE user_uuid = $1', [userId]
     );
 
     // If the user has no books in the bookshelf, return an empty result
@@ -210,11 +210,12 @@ app.post('/api/logout', (req, res) => {
       .map((row, index) => `${index + 1}. "${row.book_name}" by ${row.authors || "Unknown Author"}`)
       .join("\n");
 
-    const prompt = `Here are the books I've favorited:\n${favoritedBooks}\nCan you recommend some similar books that I might enjoy? I want the recommendations to be ${type}$`;
+    const prompt = `Here are the books I've favorited:\n${favoritedBooks}\nCan you recommend 3 similar books that I might enjoy? I want the recommendations to be ${type}$\n
+                    generate the resoponse in the format of Name: Author: Details: without any other unessary text`;
 
     // Call OpenAI's API to get book recommendations
-    const response = await openai.chat.completion.create({
-      model: "gpt-4",  // You can also use "gpt-3.5-turbo"
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",  // You can also use "gpt-3.5-turbo"
       messages: [
         { role: "system", content: "You are a helpful assistant that recommends books based on user preferences." },
         { role: "user", content: prompt }
@@ -222,10 +223,28 @@ app.post('/api/logout', (req, res) => {
     });
 
     // Extract the recommendations from the OpenAI response
-    const recommendations = response.data.choices[0].message.content;
+  
+    const recommendations = response.choices[0].message.content;
+    const recommendationsArray = recommendations
+    .split(/Name:\s+/)  // Split the text by "Name: " to isolate each recommendation
+    .filter(rec => rec.trim() !== "");  // Remove empty strings
 
+  // Map each recommendation into an object with name, author_name, and details
+  const structuredRecommendations = recommendationsArray.map(rec => {
+    // Extract Name, Author, and Details using regex
+    const nameMatch = rec.match(/^"(.+?)"/);
+    const authorMatch = rec.match(/Author:\s+(.+)/);
+    const detailsMatch = rec.match(/Details:\s+(.+)/);
+
+    return {
+      name: nameMatch ? nameMatch[1] : "Unknown",
+      author_name: authorMatch ? authorMatch[1].trim() : "Unknown",
+      details: detailsMatch ? detailsMatch[1].trim() : "No details available"
+    };
+  });
+  console.log(structuredRecommendations);
     // Send recommendations back to the client
-    res.status(200).json({ recommendations });
+    res.status(200).json({ structuredRecommendations });
   } catch (error) {
     console.error('Error fetching recommendations from OpenAI:', error);
     res.status(500).json({ message: 'An error occurred while generating recommendations' });

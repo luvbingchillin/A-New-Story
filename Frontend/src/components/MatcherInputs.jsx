@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import surprise from '../assets/images/discover.jpg';
 import normal from '../assets/images/test.jpeg';
+import MatcherCards from './MatcherCards';
 
 const MatcherInputs = () => {
   const [showContent, setShowContent] = useState(false);
@@ -8,6 +9,7 @@ const MatcherInputs = () => {
   const [books, setBooks]= useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleClick = (e) => {
     setMode(e);
@@ -18,7 +20,7 @@ const MatcherInputs = () => {
   const fetchRec = async(mode) =>{
     setLoading(true);
     try {
-      const books = await fetch('/api/recommendations',{
+      const recs = await fetch('/api/recommendations',{
         method: 'POST',
         headers:{
           'Content-Type': 'application/json',
@@ -26,12 +28,13 @@ const MatcherInputs = () => {
         credentials: 'include',
         body: JSON.stringify({mode}),
       })
-      if(!books.ok){
+      if(!recs.ok){
         setErrorMessage('Failed to fetch books');
         return;
       }
-      const data = await books.json();
-      setBooks(data.recommendations);
+      const data = await recs.json();
+      console.log('Response Data:', data);
+      setBooks(data.structuredRecommendations);
       
     } catch (error) {
       console.error(error);
@@ -42,7 +45,8 @@ const MatcherInputs = () => {
   }
 
   const handleSwipe=(direction, index)=>{
-    setBooks((prevBooks) => prevBooks.filter((_, i) => i !== index));
+    console.log(`Swiped ${direction}`);
+    setCurrentIndex((prevIndex) => prevIndex + 1);
   }
 
 
@@ -93,9 +97,17 @@ const MatcherInputs = () => {
       {showContent && ( <div className="relative w-full h-screen flex justify-center items-center">
         {loading && <div>Loading books...</div>}
 
-        {errorMessage ? (<div className="text-center mx-auto text-red-500">{errorMessage}</div> ):(!loading && books.length > 0 && books.map((book, index) => (
-            <BookCard key={index} book={book} onSwipe={(direction) => handleSwipe(direction, index)} />
-          ))
+        {errorMessage ? 
+        (<div className="text-center mx-auto text-red-500">{errorMessage}</div> 
+        ) :(
+          !loading && 
+          books.length > 0 &&  
+          currentIndex < books.length &&(
+            <MatcherCards 
+            onSwipe={handleSwipe}  
+            book={books[currentIndex]} 
+            />
+          )
         )}
         {!loading && books.length === 0 && <div>No books available.</div>}
         </div>

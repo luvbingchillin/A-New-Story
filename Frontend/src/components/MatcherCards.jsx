@@ -33,7 +33,7 @@ const MatcherCards = ({ book, onSwipe }) => {
         }
       }}
     >
-      <h3 className="text-xl font-semibold text-center">{book}</h3>
+      <h3 className="text-xl font-semibold text-center">{book.author_name}</h3>
       <div>{book.name}</div>
       <img
             src={book.img}
