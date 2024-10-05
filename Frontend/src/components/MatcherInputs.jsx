@@ -19,6 +19,32 @@ const MatcherInputs = () => {
 
   const fetchRec = async(mode) =>{
     setLoading(true);
+    const mockData = {
+      structuredRecommendations: [
+        {
+          name: 'Mock Book 1',
+          author_name: 'Author 1',
+          details: 'Fiction',
+          img: 'https://via.placeholder.com/150', // Placeholder image
+        },
+        {
+          name: 'Mock Book 2',
+          author_name: 'Author 2',
+          details: 'Non-fiction',
+          img: 'https://via.placeholder.com/150', // Placeholder image
+        },
+        {
+          name: 'Mock Book 3',
+          author_name: 'Author 3',
+          details: 'Fantasy',
+          img: 'https://via.placeholder.com/150', // Placeholder image
+        },
+      ],
+    };
+    console.log('Using mock data for development.');
+    setBooks(mockData.structuredRecommendations);
+    setLoading(false); // Stop loading
+    return;
     try {
       const recs = await fetch('/api/recommendations',{
         method: 'POST',
@@ -46,7 +72,13 @@ const MatcherInputs = () => {
 
   const handleSwipe=(direction, index)=>{
     console.log(`Swiped ${direction}`);
-    setCurrentIndex((prevIndex) => prevIndex + 1);
+    if(currentIndex<books.length-1){
+      setCurrentIndex((prevIndex) => prevIndex + 1);
+    }
+    else{
+      console.log("no more books")
+    }
+
   }
 
 
