@@ -19,7 +19,7 @@ const MatcherInputs = () => {
 
   const fetchRec = async(mode) =>{
     setLoading(true);
-    const mockData = {
+    {/*const mockData = {
       structuredRecommendations: [
         {
           name: 'Mock Book 1',
@@ -44,7 +44,7 @@ const MatcherInputs = () => {
     console.log('Using mock data for development.');
     setBooks(mockData.structuredRecommendations);
     setLoading(false); // Stop loading
-    return;
+    return;*/}
     try {
       const recs = await fetch('/api/recommendations',{
         method: 'POST',
@@ -70,8 +70,27 @@ const MatcherInputs = () => {
     }
   }
 
-  const handleSwipe=(direction, index)=>{
+  const handleSwipe=async(direction, index)=>{
     console.log(`Swiped ${direction}`);
+    if(direction === "right"){
+      try {
+        const addToShelf = await fetch('api/addtoBS',{
+          method:'POST',
+          headers:{
+            'Content-type':'application/json',
+          },
+          credentials:'include',
+          body:JSON.stringify(books[index])
+        }
+        )     
+      } catch (error) {
+        
+      }
+
+    }
+    else{
+        
+    }
     if(currentIndex<books.length-1){
       setCurrentIndex((prevIndex) => prevIndex + 1);
     }

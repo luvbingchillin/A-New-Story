@@ -13,6 +13,35 @@ const App = () => {
   const [isLoginMode, setIsLoginMode] = useState(false);
   /// const [books, setBooks] = useState([])
 
+  {/*useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/check-auth', {
+          method: 'GET',
+          credentials: 'include', // This ensures that cookies are sent with the request
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.loggedIn) {
+            setLoggedIn(true); // User is authenticated
+          } else {
+            setLoggedIn(false); // User is not authenticated
+          }
+        } else {
+          setLoggedIn(false); // If the response is not OK (e.g., 401)
+        }
+      } catch (error) {
+        console.error('Error checking auth:', error);
+        setLoggedIn(false);
+      }
+    };
+
+    checkAuth(); // Call the auth check on page load
+  }, []); // Run only once on component mount
+*/}
+
+
   const handleOpenModal = (loginMode = false) => {
     console.log('Opening modal:', loginMode);
     setIsLoginMode(loginMode);

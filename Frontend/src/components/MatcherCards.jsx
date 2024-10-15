@@ -50,8 +50,8 @@ const MatcherCards = ({ book, onSwipe }) => {
       <div className="flex w-full space-x-4 h-full border-green-500 border-4 mt-2">
         <div className="w-2/3">
           <img
-            src={book.img}
-            className="w-full h-[86%] object-cover"
+            src={book.imageUrl}
+            className="w-full h-[86%] object-contain"
             alt={book.name}
           />
           <h3 className="text-2xl font-semibold text-center">{book.name}</h3>

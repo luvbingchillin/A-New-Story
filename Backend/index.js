@@ -9,15 +9,26 @@ const app = express();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const {OpenAI} = require('openai');
-
+const {createClient} = require('@supabase/supabase-js')
 const PORT = process.env.PORT || 5000;
+
+
+
+
+require('dotenv').config()
+///supabase setup
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 
 /// import jwt verification function
 const verifyToken = require('./authoMiddleware')
 
 
 // load enviromental variables form env file
-require('dotenv').config()
+
 
 
 
@@ -27,15 +38,6 @@ app.use(cors());
 app.use(express.json());
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY,});
-
-// PostgreSQL connection setup for now
-const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "account", 
-  password: "destiny", 
-  port: 5432,
-});
 
 
 // Route to search for books using the Google Books API
@@ -56,10 +58,7 @@ app.get('/search', async (req, res) => {
   }
 });
 
-// Log for debuggg
-app.get('/', (req, res) => {
-  res.send('Backend is running');
-});
+
 
 // POST route for user signup (store in PostgreSQL)
 app.post('/api/signup', async (req, res) => {
@@ -72,13 +71,14 @@ app.post('/api/signup', async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10)
-    const result = await pool.query(
-      'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *',
-      [username, email, hashedPassword]
-    );
-
-    const newUser = result.rows[0];
-    res.status(201).json({ message: "User created successfully", user: newUser });
+    const { data, error } = await supabase
+    .from('users')
+    .insert([{ username, email, password: hashedPassword },
+    ])
+    .select()
+    console.log(data)
+    const newUser = data[0];
+    res.status(201).json({ message: "User created successfully", user: newUser });  
 
   } catch (error) {
     console.error('Error inserting user:', error);
@@ -101,14 +101,16 @@ app.post('/api/login', async (req,res)=>{
     return  res.status(400).json({ error: "All fields are required" }); 
   }
   try {
-    const result = await pool.query(
-      'SELECT * FROM users WHERE username=$1',[username]
-    )
-    if(result.rows.length ===0){
+    const { data: users, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('username', username);
+
+    if(users.length ===0){
       return res.status(404).json({error:"Invalid username or password"})
     }
 
-    const user = result.rows[0];
+    const user = users[0];
     const wordMatch = await bcrypt.compare(password, user.password);
     if(!wordMatch){
       return res.status(404).json({error:'Invalid password'})
@@ -149,10 +151,10 @@ app.post('/api/addtoBS',verifyToken, async(req,res)=>{
     const {isbn_10, isbn_13, book_name, author_name} = req.body;
     console.log('Request Body:', req.body);
     const user_uuid = req.userId;
-    const result = await pool.query(
-      'INSERT INTO bookshelf (isbn_10, isbn_13, book_name, user_uuid, author_name) VALUES ($1,$2,$3,$4,$5)',
-      [isbn_10, isbn_13, book_name, user_uuid, author_name]
-    );
+    const { data, error } = await supabase
+      .from('bookshelf')
+      .insert([{ isbn_10, isbn_13, book_name, user_uuid, author_name }]);
+
     return res.status(200).json({message:"Book added to bookshelf"})
   } catch (error) {
     res.status(500).json({ error: "An error occurred while adding book" });
@@ -168,11 +170,14 @@ app.get('/api/bookshelf', verifyToken, async (req, res) => {
     console.log(userId);
 
     // Query the database for the user's bookshelf based on userId
-    const result = await pool.query('SELECT * FROM bookshelf WHERE user_uuid = $1', [userId]);
+    const { data: books, error } = await supabase
+      .from('bookshelf')
+      .select('*')
+      .eq('user_uuid', userId);
 
     // If books found, return them; else, return an empty array or a message
-    if (result.rows.length > 0) {
-      res.status(200).json(result.rows);
+    if (books.length > 0) {
+      res.status(200).json(books);
     } else {
       res.status(200).json({ message: 'No books found' });
     }
@@ -230,18 +235,35 @@ app.post('/api/logout', (req, res) => {
     .filter(rec => rec.trim() !== "");  // Remove empty strings
 
   // Map each recommendation into an object with name, author_name, and details
-  const structuredRecommendations = recommendationsArray.map(rec => {
+  const structuredRecommendations = await Promise.all(recommendationsArray.map(async (rec) => {
     // Extract Name, Author, and Details using regex
     const nameMatch = rec.match(/^"(.+?)"/);
     const authorMatch = rec.match(/Author:\s+(.+)/);
     const detailsMatch = rec.match(/Details:\s+(.+)/);
 
-    return {
-      name: nameMatch ? nameMatch[1] : "Unknown",
-      author_name: authorMatch ? authorMatch[1].trim() : "Unknown",
-      details: detailsMatch ? detailsMatch[1].trim() : "No details available"
-    };
-  });
+    const  bookName= nameMatch ? nameMatch[1] : "Unknown";
+    const  authorName= authorMatch ? authorMatch[1].trim() : "Unknown";
+    const  details= detailsMatch ? detailsMatch[1].trim() : "No details available";
+
+    if (bookName === "Unknown" || authorName  === "Unkown") {
+      return null; // Return null if any field is missing
+    }
+   
+    let imageUrl = 'No image available';
+      try {
+        const googleBooksResponse = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${bookName}+inauthor:${authorName}&key=${process.env.GOOGLE_BOOKS_API_KEY}`);
+        const bookData = googleBooksResponse.data.items[0];
+        imageUrl = bookData.volumeInfo.imageLinks?.thumbnail || imageUrl;
+      } catch (error) {
+        console.error(`Error fetching image for ${bookName} by ${authorName}:`, error.message);
+      }
+    return{
+      name:bookName,
+      author_name:authorName,
+      details:details,
+      imageUrl: imageUrl
+    }
+  }));
   console.log(structuredRecommendations);
     // Send recommendations back to the client
     res.status(200).json({ structuredRecommendations });
