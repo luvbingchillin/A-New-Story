@@ -35,7 +35,7 @@ const BookShelf = ({ refreshTrigger }) => {
   }, [refreshTrigger]); // Re-fetch books whenever refreshTrigger changes
 
   return (
-    <div className='w-1/5 h-auto mt-[100px] mt-[130px] mr-[80px]'>
+    <div className='w-1/5 h-auto mt-[100px] mt-[190px] mr-[80px]'>
       <h2 className='flex justify-start font-poppins text-2xl font-semibold '>
         Bookshelf
       </h2>

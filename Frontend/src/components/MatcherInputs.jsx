@@ -103,46 +103,59 @@ const MatcherInputs = () => {
 
 
   return (
-    <div className="w-full h-full font-poppins">
+    <div className="w-full h-full font-poppins bg-[#182c25]">
       {!showContent && (
         <div className="w-full h-screen flex">
           {/* Normal recommendations button */}
           <button
-            className="w-1/2 h-full pb-[80px] text-[80px] relative overflow-hidden transition-all group"
-            style={{
-              backgroundColor: 'rgba(255,255,255)',
-            }}
-            onClick={() => handleClick('normal')}
-          >
-            <span className="relative z-10 text-black transition-all group-hover:text-white after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[4px] after:bg-white after:w-full after:origin-center after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-700">
-              Match Me!
-            </span>
-            <div
-              className="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-              style={{
-                backgroundImage: `url(${normal})`,
-              }}
-            ></div>
-          </button>
+  className="w-1/2 h-full pb-[80px] text-[80px] relative overflow-hidden transition-all group"
+  style={{
+    backgroundColor: 'rgba(205, 180, 145)', // Light brown background
+    borderTopRightRadius: '40px', // No rounding for the top-right corner
+     // Shadow for depth
+    border: '1px solid rgba(150, 120, 85, 0.5)', // Border to enhance the book feel
+  }}
+  onClick={() => handleClick('normal')}
+>
+  <span className="relative z-10 text-black transition-all group-hover:text-white after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[4px] after:bg-white after:w-full after:origin-center after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-700">
+    Match Me!
+  </span>
+  
+  {/* Background image transition */}
+  <div
+    className="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+    style={{
+      backgroundImage: `url(${normal})`,
+    }}
+  ></div>
+</button>
+
 
           {/* Surprise me button */}
           <button
-            className="w-1/2 h-full pb-[80px] text-[80px] relative overflow-hidden transition-all group"
-            style={{
-              backgroundColor: 'rgba(54,34,11)',
-            }}
-            onClick={() => handleClick('surprising')}
-          >
-            <span className="relative z-10 text-white transition-all group-hover:text-[#1E4A1C] after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[4px] after:bg-[#1E4A1C] after:w-full after:origin-center after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-700">
-              Surprise Me!
-            </span>
-            <div
-              className="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-              style={{
-                backgroundImage: `url(${surprise})`,
-              }}
-            ></div>
-          </button>
+  className="w-1/2 h-full pb-[80px] text-[80px] relative overflow-hidden transition-all group"
+  style={{
+    backgroundColor: 'rgba(205, 180, 145)', // Dark brown background
+    borderTopLeftRadius: '40px', // Rounded top-left corner
+    boxShadow: '-20px 0px 30px rgba(0, 0, 0, 0.2)',// Shadow for depth
+    border: '1px solid rgba(150, 120, 85, 0.5)', // Border to enhance the book feel
+  }}
+  onClick={() => handleClick('surprising')}
+>
+  <span className="relative z-10 text-white transition-all group-hover:text-[#1E4A1C] after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[4px] after:bg-[#1E4A1C] after:w-full after:origin-center after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-700">
+    Surprise Me!
+  </span>
+  
+  {/* Background image transition */}
+  <div
+    className="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+    style={{
+      backgroundImage: `url(${surprise})`,
+    }}
+  ></div>
+</button>
+
+
         </div>
       )}
       {showContent && ( <div className="relative w-full h-screen flex justify-center items-center">

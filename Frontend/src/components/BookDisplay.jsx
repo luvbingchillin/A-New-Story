@@ -87,7 +87,7 @@ const BookDisplay = ({ books, onAddBook }) => {
                     const isbn_10 = book.volumeInfo.industryIdentifiers?.find(id => id.type === 'ISBN_10')?.identifier;
                     const isbn_13 = book.volumeInfo.industryIdentifiers?.find(id => id.type === 'ISBN_13')?.identifier;
                     const bookName = book.volumeInfo.title;
-                    const author = book.volumeInfo.author;
+                    const author = book.volumeInfo.authors;
 
                     // Prepare book data for the POST request
                     const bookData = {

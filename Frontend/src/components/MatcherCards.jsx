@@ -48,7 +48,7 @@ const MatcherCards = ({ book, onSwipe }) => {
       }}
     >
       <div className="flex w-full space-x-4 h-full border-green-500 border-4 mt-2">
-        <div className="w-2/3">
+        <div className="w-2/3 bg-[#E0DBD2]">
           <img
             src={book.imageUrl}
             className="w-full h-[86%] object-contain"
@@ -57,7 +57,7 @@ const MatcherCards = ({ book, onSwipe }) => {
           <h3 className="text-2xl font-semibold text-center">{book.name}</h3>
           <div className="mt-2 text-xl text-center">By: {book.author_name}</div>
         </div>
-        <div className="w-2/5 p-4 border-black border-4">{book.details}</div>
+        <div className="w-2/5 p-4 border-black border-4 bg-[#F4F1EA]">{book.details}</div>
       </div>
     </motion.div>
   );

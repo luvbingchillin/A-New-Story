@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import MatcherBT from '../components/MatcherBT';
 import Usertesti from '../components/Usertesti';
 import '../index.css'; 
+import { AuthContext } from '../Context/AuthContext';
 
 
-const HomePage = ({loggedIn, handleOpenModal}) => {
+const HomePage = ({handleOpenModal}) => {
+  const { loggedIn} = useContext(AuthContext);
 
   return (
     <div

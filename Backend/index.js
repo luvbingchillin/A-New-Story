@@ -40,6 +40,12 @@ app.use(express.json());
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY,});
 
 
+
+app.get('/api/check-auth', verifyToken, (req, res) => {
+  // If token is valid, this route sends back loggedIn: true
+  res.status(200).json({ loggedIn: true });
+});
+
 // Route to search for books using the Google Books API
 app.get('/search', async (req, res) => {
   const { query } = req.query;
@@ -201,18 +207,20 @@ app.post('/api/logout', (req, res) => {
     const type = req.body;
 
     // Fetch user's favorited books from the database
-    const result = await pool.query(
-      'SELECT book_name, author_name FROM bookshelf WHERE user_uuid = $1', [userId]
-    );
+
+    const { data: result, error } = await supabase
+    .from('bookshelf')
+    .select('book_name, author_name')
+    .eq('user_uuid', userId);
 
     // If the user has no books in the bookshelf, return an empty result
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return res.status(200).json({ message: 'No books in bookshelf' });
     }
-
+    console.log(result)
     // Format the list of favorited books for the prompt
-    const favoritedBooks = result.rows
-      .map((row, index) => `${index + 1}. "${row.book_name}" by ${row.authors || "Unknown Author"}`)
+    const favoritedBooks = result
+      .map((row, index) => `${index + 1}. "${row.book_name}" by ${row.authors_name || "Unknown Author"}`)
       .join("\n");
 
     const prompt = `Here are the books I've favorited:\n${favoritedBooks}\nCan you recommend 3 similar books that I might enjoy? I want the recommendations to be ${type}$\n

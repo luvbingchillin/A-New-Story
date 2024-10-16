@@ -8,7 +8,7 @@ export default {
     extend: {
       fontFamily:{
         sans:['Roboto','sans-serif'],
-        poppins: ['Poppins', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif','Merriweather','Lora'],
       },
       gridTemplateColumns:{
         '70/30':'70% 28%',
