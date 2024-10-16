@@ -224,7 +224,7 @@ app.post('/api/logout', (req, res) => {
       .join("\n");
 
     const prompt = `Here are the books I've favorited:\n${favoritedBooks}\nCan you recommend 3 similar books that I might enjoy? I want the recommendations to be ${type}$\n
-                    generate the resoponse in the format of Name: Author: Details: without any other unessary text`;
+                    generate the resoponse in the format of Name: Author: Details: without any other unnessary text`;
 
     // Call OpenAI's API to get book recommendations
     const response = await openai.chat.completions.create({
@@ -262,6 +262,8 @@ app.post('/api/logout', (req, res) => {
         const googleBooksResponse = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${bookName}+inauthor:${authorName}&key=${process.env.GOOGLE_BOOKS_API_KEY}`);
         const bookData = googleBooksResponse.data.items[0];
         imageUrl = bookData.volumeInfo.imageLinks?.thumbnail || imageUrl;
+        isbn10 = bookData.volumeInfo.industryIdentifiers?.find(id => id.type === 'ISBN_10')?.identifier;
+        isbn13 = bookData.volumeInfo.industryIdentifiers?.find(id => id.type === 'ISBN_13')?.identifier;
       } catch (error) {
         console.error(`Error fetching image for ${bookName} by ${authorName}:`, error.message);
       }
@@ -269,12 +271,15 @@ app.post('/api/logout', (req, res) => {
       name:bookName,
       author_name:authorName,
       details:details,
-      imageUrl: imageUrl
+      imageUrl: imageUrl,
+      isbn10: isbn10,
+      isbn13: isbn13,
     }
   }));
-  console.log(structuredRecommendations);
     // Send recommendations back to the client
-    res.status(200).json({ structuredRecommendations });
+    const validRecommendations = structuredRecommendations.filter(item => item !== null);
+    console.log("backend return", validRecommendations);
+    res.status(200).json({ validRecommendations });
   } catch (error) {
     console.error('Error fetching recommendations from OpenAI:', error);
     res.status(500).json({ message: 'An error occurred while generating recommendations' });

@@ -13,6 +13,7 @@ const MatcherInputs = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHoveredRight, setIsHoveredRight] = useState(false);
   const [isHoveredLeft, setIsHoveredLeft] = useState(false);
+  
 
   const handleClick = (e) => {
     setMode(e);
@@ -63,8 +64,7 @@ const MatcherInputs = () => {
       }
       const data = await recs.json();
       console.log('Response Data:', data);
-      setBooks(data.structuredRecommendations);
-      
+      setBooks(data.validRecommendations);
     } catch (error) {
       console.error(error);
       setErrorMessage('Failed to fetch books due to server error');
@@ -73,9 +73,19 @@ const MatcherInputs = () => {
     }
   }
 
-  const handleSwipe=async(direction, index)=>{
+  const handleSwipe=async(direction)=>{
     console.log(`Swiped ${direction}`);
-    if(direction === "right"){
+    console.log("Index:", currentIndex);
+    console.log("Books Array:", books);
+    console.log("Book at currentIndex:", books[currentIndex]);
+    const bookData = {
+      isbn_10: books[currentIndex].isbn10,
+      isbn_13: books[currentIndex].isbn13,
+      book_name: books[currentIndex].name,
+      author_name: books[currentIndex].author_name,
+    };
+  
+    if(direction === "left"){
       try {
         const addToShelf = await fetch('api/addtoBS',{
           method:'POST',
@@ -83,16 +93,18 @@ const MatcherInputs = () => {
             'Content-type':'application/json',
           },
           credentials:'include',
-          body:JSON.stringify(books[index])
+          body:JSON.stringify(bookData)
+        })
+        if (addToShelf.ok) {     
+          console.log("Book added");
         }
-        )     
       } catch (error) {
-        
+        console.log("failed to add to bookshelf")
       }
 
     }
     else{
-        
+        console.log("book rejected")
     }
     if(currentIndex<books.length-1){
       setCurrentIndex((prevIndex) => prevIndex + 1);

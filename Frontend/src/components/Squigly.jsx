@@ -3,7 +3,7 @@ import React from 'react';
 const SquigglyText = ({text}) => {
   return (
     <>
-      <div className="squiggly mt-[160px]" contentEditable>
+      <div className="squiggly mt-[160px]">
         {text}
       </div>
 
