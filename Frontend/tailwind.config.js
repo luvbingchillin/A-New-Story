@@ -7,8 +7,10 @@ export default {
   theme: {
     extend: {
       fontFamily:{
-        sans:['Roboto','sans-serif'],
-        poppins: ['Poppins', 'sans-serif','Merriweather','Lora'],
+        sans: ['Poppins', 'sans-serif'],
+        serif: ['Merriweather', 'serif'],
+        lora: ['Lora', 'serif'],
+        amatic: ['Amatic SC', 'cursive'],
       },
       gridTemplateColumns:{
         '70/30':'70% 28%',

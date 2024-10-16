@@ -43,15 +43,9 @@ const Navbar = ({ loggedIn, handleOpenModal, transparent, handleLogout }) => {
         <div>
           {loggedIn ? (
             <>
-            <Link
-              to="/profile"
-              className="bg-[#1E4A1C] text-white py-2 px-5 rounded-full text-xl shadow-lg hover:bg-[#245922] focus:outline-none"
-            >
-              Profile
-            </Link>
              <button
              onClick={handleLogout} // Trigger logout dont need arrow since the function has no ()
-             className="ml-4 bg-red-500 text-white py-2 px-5 rounded-full text-xl shadow-lg hover:bg-red-600 focus:outline-none"
+             className="ml-4 text-white py-2 px-5 rounded-full text-xl shadow-lg hover:bg-red-600 focus:outline-none"
            >
              Log Out
            </button>

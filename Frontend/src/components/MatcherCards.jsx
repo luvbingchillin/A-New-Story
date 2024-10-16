@@ -22,7 +22,7 @@ const MatcherCards = ({ book, onSwipe }) => {
 
   return (
     <motion.div
-      className="w-1/2 px-[10px] mx-auto h-4/5 border-4 border-red-500 cursor-grab hover:cursor-grabbing rounded-lg"
+      className="w-1/2 px-[10px] mx-auto h-5/6 border-4 border-black-500 cursor-grab hover:cursor-grabbing rounded-lg"
       drag="x"
       style={{
         x: motionValue, // Link motion value to x
@@ -47,8 +47,8 @@ const MatcherCards = ({ book, onSwipe }) => {
         }
       }}
     >
-      <div className="flex w-full space-x-4 h-full border-green-500 border-4 mt-2">
-        <div className="w-2/3 bg-[#E0DBD2]">
+      <div className="flex w-full space-x-4 h-full border-black-500 border-4 mt-2 bg-[#E0DBD2]">
+        <div className="w-2/3 ">
           <img
             src={book.imageUrl}
             className="w-full h-[86%] object-contain"

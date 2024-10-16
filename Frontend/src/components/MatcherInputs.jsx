@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import surprise from '../assets/images/discover.jpg';
 import normal from '../assets/images/test.jpeg';
 import MatcherCards from './MatcherCards';
+import SquigglyText from './Squigly';
 
 const MatcherInputs = () => {
   const [showContent, setShowContent] = useState(false);
@@ -10,6 +11,8 @@ const MatcherInputs = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHoveredRight, setIsHoveredRight] = useState(false);
+  const [isHoveredLeft, setIsHoveredLeft] = useState(false);
 
   const handleClick = (e) => {
     setMode(e);
@@ -108,18 +111,22 @@ const MatcherInputs = () => {
         <div className="w-full h-screen flex">
           {/* Normal recommendations button */}
           <button
-  className="w-1/2 h-full pb-[80px] text-[80px] relative overflow-hidden transition-all group"
+  className="w-1/2 h-full pb-[80px] text-[100px] relative overflow-hidden transition-all group"
   style={{
-    backgroundColor: 'rgba(205, 180, 145)', // Light brown background
+    backgroundColor: 'rgba(190,143,60)', // Light brown background
     borderTopRightRadius: '40px', // No rounding for the top-right corner
      // Shadow for depth
     border: '1px solid rgba(150, 120, 85, 0.5)', // Border to enhance the book feel
   }}
   onClick={() => handleClick('normal')}
+  onMouseEnter={() => setIsHoveredLeft(true)}
+  onMouseLeave={() => setIsHoveredLeft(false)}
 >
-  <span className="relative z-10 text-black transition-all group-hover:text-white after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[4px] after:bg-white after:w-full after:origin-center after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-700">
-    Match Me!
-  </span>
+<span
+      className="relative z-10 text-white transition-all group-hover:text-[#1E4A1C] cursor-pointer"
+    >
+      {isHoveredLeft ? <SquigglyText text="Match Me!" /> : 'Match Me!'}
+    </span>
   
   {/* Background image transition */}
   <div
@@ -133,19 +140,22 @@ const MatcherInputs = () => {
 
           {/* Surprise me button */}
           <button
-  className="w-1/2 h-full pb-[80px] text-[80px] relative overflow-hidden transition-all group"
+  className="w-1/2 h-full pb-[80px] text-[100px] relative overflow-hidden transition-all group"
   style={{
-    backgroundColor: 'rgba(205, 180, 145)', // Dark brown background
+    backgroundColor: 'rgba(217,157,41)', // Dark brown background
     borderTopLeftRadius: '40px', // Rounded top-left corner
     boxShadow: '-20px 0px 30px rgba(0, 0, 0, 0.2)',// Shadow for depth
     border: '1px solid rgba(150, 120, 85, 0.5)', // Border to enhance the book feel
   }}
   onClick={() => handleClick('surprising')}
+  onMouseEnter={() => setIsHoveredRight(true)}
+  onMouseLeave={() => setIsHoveredRight(false)}
 >
-  <span className="relative z-10 text-white transition-all group-hover:text-[#1E4A1C] after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[4px] after:bg-[#1E4A1C] after:w-full after:origin-center after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-700">
-    Surprise Me!
-  </span>
-  
+<span
+      className="relative z-10 text-white transition-all group-hover:text-[#1E4A1C] cursor-pointer"
+    >
+      {isHoveredRight ? <SquigglyText text="Surprise Me!" /> : 'Surprise Me!'}
+    </span>
   {/* Background image transition */}
   <div
     className="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-700 group-hover:opacity-100"
@@ -158,8 +168,8 @@ const MatcherInputs = () => {
 
         </div>
       )}
-      {showContent && ( <div className="relative w-full h-screen flex justify-center items-center">
-        {loading && <div>Loading books...</div>}
+      {showContent && ( <div className="relative w-full h-screen flex justify-center items-center ">
+        {loading && <div className='text-3xl'>Loading books...</div>}
 
         {errorMessage ? 
         (<div className="text-center mx-auto text-red-500">{errorMessage}</div> 

@@ -7,6 +7,8 @@ import Matcher from './pages/Matcher';
 import { AuthProvider } from './Context/AuthContext'; // AuthProvider to wrap the app
 import { useState } from 'react';
 
+
+
 const App = () => {
   // Modal state management
   const [showModal, setShowModal] = useState(false);
