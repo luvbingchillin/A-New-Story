@@ -7,7 +7,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',  // Backend server
+        target: 'https://a-new-story-backend-4jyi.onrender.com', // Deployed backend URL
+        changeOrigin: true,  // Backend server
       },
     },
   },
