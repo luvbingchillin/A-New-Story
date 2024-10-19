@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   "http://localhost:5173", // Local development
-  "https://a-new-story-frontend.vercel.app/", // Production
+  "https://a-new-story-frontend.vercel.app", // Production
 ];
 
 
