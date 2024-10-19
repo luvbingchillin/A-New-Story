@@ -32,7 +32,10 @@ const verifyToken = require('./authoMiddleware')
 
 // Middleware
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+  origin: "https://a-new-story-frontend.vercel.app/", // Replace with your actual Vercel domain
+  credentials: true, // If you need to send cookies
+}));
 app.use(express.json());
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY,});

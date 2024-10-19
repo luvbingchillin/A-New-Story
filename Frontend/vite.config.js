@@ -2,12 +2,13 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
       '/api': {
-        target: 'https://a-new-story-backend-4jyi.onrender.com', // Deployed backend URL
+        target: backendUrl, // Deployed backend URL
         changeOrigin: true,  // Backend server
       },
     },
