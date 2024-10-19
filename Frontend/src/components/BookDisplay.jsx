@@ -100,7 +100,7 @@ const BookDisplay = ({ books, onAddBook }) => {
                     // Call handleAddBook and pass the bookData object
                     handleAddBook(bookData);
                   }}
-                  className='bg-[#1E4A1C] hover:bg-[#245922] text-white rounded-md px-2 py-1'>
+                  className={`bg-[#1E4A1C] hover:bg-[#245922] text-white rounded-md px-2 py-1 hover-expand-x mt-1 ml-1`}>
                 Add to shelf
               </button>
             </div>

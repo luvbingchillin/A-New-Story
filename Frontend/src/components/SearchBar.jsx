@@ -50,7 +50,7 @@ const SearchBar = ({onAddBook}) => {
     console.log('Querying:', queryString); // Debugg zzzzz sian
 
     try {
-      const response = await fetch(`http://localhost:5000/search?query=${queryString}`);
+      const response = await fetch(`/api/search?query=${queryString}`);
       if (!response.ok) {
         throw new Error('Failed to fetch');
       }
@@ -59,7 +59,9 @@ const SearchBar = ({onAddBook}) => {
       // filter response data
       const filteredBooks = data.items.filter(book => {
         const categories = book.volumeInfo.categories || [];
-        return !categories.includes('Comics & Graphic Novels');
+        const identifiers = book.volumeInfo.industryIdentifiers || [];
+        const hasIsbn = identifiers.some(id => id.type === 'ISBN_10' || id.type === 'ISBN_13');
+        return !categories.includes('Comics & Graphic Novels') && hasIsbn;
       });
       setResults(filteredBooks || []); 
       setHasSearched(true); 

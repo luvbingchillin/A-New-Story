@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import SearchBar from '../components/SearchBar'
 import BookShelf from '../components/BookShelf'
 
-export const BookSearch = () => {
+const BookSearch = () => {
   /// passes handleAddbook into searchbar to update refreshtrigger which rerenders the bookshelf
     const [refreshTrigger, setRefreshTrigger] = useState(false);
     const handleAddBook = () => {

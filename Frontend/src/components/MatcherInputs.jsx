@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import surprise from '../assets/images/discover.jpg';
 import normal from '../assets/images/test.jpeg';
 import MatcherCards from './MatcherCards';
 import SquigglyText from './Squigly';
+import { AuthContext } from '../Context/AuthContext';
+
 
 const MatcherInputs = () => {
   const [showContent, setShowContent] = useState(false);
@@ -13,7 +15,7 @@ const MatcherInputs = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHoveredRight, setIsHoveredRight] = useState(false);
   const [isHoveredLeft, setIsHoveredLeft] = useState(false);
-  
+  const {loggedIn} = useContext(AuthContext);
 
   const handleClick = (e) => {
     setMode(e);
@@ -154,7 +156,7 @@ const MatcherInputs = () => {
           <button
   className="w-1/2 h-full pb-[80px] text-[100px] relative overflow-hidden transition-all group"
   style={{
-    backgroundColor: 'rgba(217,157,41)', // Dark brown background
+    backgroundColor: 'rgba(200, 148, 65)', // Dark brown background
     borderTopLeftRadius: '40px', // Rounded top-left corner
     boxShadow: '-20px 0px 30px rgba(0, 0, 0, 0.2)',// Shadow for depth
     border: '1px solid rgba(150, 120, 85, 0.5)', // Border to enhance the book feel
@@ -181,21 +183,23 @@ const MatcherInputs = () => {
         </div>
       )}
       {showContent && ( <div className="relative w-full h-screen flex justify-center items-center ">
-        {loading && <div className='text-3xl'>Loading books...</div>}
+        {!loggedIn ? (
+  <div className="text-center mx-auto text-5xl text-red-500">Please Login To Start Matching</div>
+) : errorMessage ? (
+  <div className="text-center mx-auto text-5xl text-red-500">{errorMessage}</div>
+) : loading ? (
+  <div className="text-center mx-auto text-7xl text-white">
+  <SquigglyText text="Loading Books!" />
+  </div>
+) : books.length > 0 && currentIndex < books.length-1 ? (
+  <MatcherCards
+    onSwipe={handleSwipe}
+    book={books[currentIndex]}
+  />
+) : (
+  <div className="text-center mx-auto text-5xl text-white">No more recommendations available.</div>
+)}
 
-        {errorMessage ? 
-        (<div className="text-center mx-auto text-red-500">{errorMessage}</div> 
-        ) :(
-          !loading && 
-          books.length > 0 &&  
-          currentIndex < books.length &&(
-            <MatcherCards 
-            onSwipe={handleSwipe}  
-            book={books[currentIndex]} 
-            />
-          )
-        )}
-        {!loading && books.length === 0 && <div>No books available.</div>}
         </div>
       )}
     </div>

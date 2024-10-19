@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import MainLayout from './Layouts/MainLayout';
 import BookSearch from './pages/BookSearch';
 import NotFound from './pages/NotFound';
+import MyBooks from './pages/MyBooks';
 import Matcher from './pages/Matcher';
 import { AuthProvider } from './Context/AuthContext'; // AuthProvider to wrap the app
 import { useState } from 'react';
@@ -40,6 +41,7 @@ const App = () => {
         <Route index element={<HomePage handleOpenModal={handleOpenModal} />} />
         <Route path="/search" element={<BookSearch />} />
         <Route path="/matcher" element={<Matcher />} />
+        <Route path='/myBooks' element={<MyBooks />}/>
         <Route path="*" element={<NotFound />} />
       </Route>
     )

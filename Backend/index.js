@@ -2,8 +2,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const bodyParser = require('body-parser');
-const { Pool } = require('pg');
 const axios = require('axios');
 const app = express();
 const jwt = require('jsonwebtoken');
@@ -47,16 +45,17 @@ app.get('/api/check-auth', verifyToken, (req, res) => {
 });
 
 // Route to search for books using the Google Books API
-app.get('/search', async (req, res) => {
+app.get('/api/search', async (req, res) => {
   const { query } = req.query;
-
+  console.log(query)
   if (!query) {
     return res.status(400).json({ message: 'Query parameter is required' });
   }
 
   try {
     // Make a request to the Google Books API with filters
-    const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}}&printType=books&maxResults=40&orderBy=relevance&key=${process.env.GOOGLE_BOOKS_API_KEY}`);
+    const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}&printType=books&maxResults=40&orderBy=relevance&key=${process.env.GOOGLE_BOOKS_API_KEY}`);
+    console.log(response.data)
     res.json(response.data);
   } catch (error) {
     console.error('Error fetching data from Google Books API:', error.message);
@@ -126,14 +125,14 @@ app.post('/api/login', async (req,res)=>{
 
     const payload = {userId: user.id, userName: user.username };
     // create tokens that can be deconded to store id and username
-    const accessToken =  jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:'1h'})
+    const accessToken =  jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:'12h'})
     const refreshToken =  jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:'7d'})
     // refreshing api to be implemented later
     res.cookie('accessToken', accessToken,{
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: 'Strict',
-      maxAge: 60 * 60 * 1000
+      maxAge: 60 * 60 * 1000 *12
     })
 
     res.cookie('refreshToken', refreshToken,{
@@ -164,6 +163,22 @@ app.post('/api/addtoBS',verifyToken, async(req,res)=>{
     return res.status(200).json({message:"Book added to bookshelf"})
   } catch (error) {
     res.status(500).json({ error: "An error occurred while adding book" });
+  }
+})
+
+app.delete('/api/bookshelf', verifyToken, async(req, res) =>{
+  try{
+    const userId = req.userId;
+    const {isbn_10, isbn_13} = req.body;
+    const {data, error} = await supabase
+      .from('bookshelf')
+      .delete()
+      .eq('isbn_10',isbn_10)
+      .eq('user_uuid', userId)
+      return res.status(200).json({message:"Book removed from bookshelf"})
+  }
+  catch(error){
+    res.status(500).json({error: "An error has occured when removing book"})
   }
 })
 
