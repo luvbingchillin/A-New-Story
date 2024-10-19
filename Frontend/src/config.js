@@ -1,5 +1,4 @@
-const backendUrl = import.meta.env.REACT_APP_BACKEND_URL || 'http://localhost:5000'; // Default to local URL in development
-
+const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 export default {
   backendUrl,
 };
