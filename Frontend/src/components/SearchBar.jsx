@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import BookDisplay from '../components/BookDisplay';
-
+import config from '../config';
 
 {/* can replace with webscrapping amazon search results instead of google api???*/}
 const SearchBar = ({onAddBook}) => {
@@ -50,7 +50,7 @@ const SearchBar = ({onAddBook}) => {
     console.log('Querying:', queryString); // Debugg zzzzz sian
 
     try {
-      const response = await fetch(`/api/search?query=${queryString}`);
+      const response = await fetch(`${config.backendUrl}/api/search?query=${queryString}`);
       if (!response.ok) {
         throw new Error('Failed to fetch');
       }

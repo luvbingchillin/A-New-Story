@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import config from '../config';
 
 const BookDisplay = ({ books, onAddBook }) => {
   const [currentPage, setCurrentPage] = useState(0); 
@@ -27,7 +28,7 @@ const BookDisplay = ({ books, onAddBook }) => {
 
   const handleAddBook = async (bookData) => {
     try {
-      const response = await fetch('/api/addtoBS',{
+      const response = await fetch(`${config.backendUrl}/api/addtoBS`,{
         method: 'POST',
         headers: {
           'Content-Type':'application/json',

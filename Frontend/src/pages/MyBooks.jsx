@@ -3,6 +3,7 @@ import React ,{useContext, useState, useEffect} from "react";
 import { AuthContext } from "../Context/AuthContext";
 import MyBookCards from "../components/MyBookCards";
 import { ClipLoader } from 'react-spinners';
+import config from '../config';
 
 const MyBooks = () =>{
     const {loggedIn} = useContext(AuthContext);
@@ -16,7 +17,7 @@ const MyBooks = () =>{
 
     const fetchbooks = async() =>{
         try {
-            const booklist = await fetch("/api/bookshelf/",{
+            const booklist = await fetch(`${config.backendUrl}/api/bookshelf/`,{
                 method: 'GET',
                 credentials: 'include',
             });
@@ -31,7 +32,7 @@ const MyBooks = () =>{
                     const isbn = book.isbn_10;
                     console.log(isbn)
                     try{
-                        const response = await fetch(`/api/search?query=${encodeURIComponent(`isbn:${isbn}`)}`)
+                        const response = await fetch(`${config.backendUrl}/api/search?query=${encodeURIComponent(`isbn:${isbn}`)}`)
                         const Data =  await response.json()
                         const books = Data.items
                         return books;

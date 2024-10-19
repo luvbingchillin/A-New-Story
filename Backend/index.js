@@ -10,7 +10,10 @@ const {OpenAI} = require('openai');
 const {createClient} = require('@supabase/supabase-js')
 const PORT = process.env.PORT || 5000;
 
-
+const allowedOrigins = [
+  "http://localhost:5173", // Local development
+  "https://a-new-story-frontend.vercel.app/", // Production
+];
 
 
 require('dotenv').config()
@@ -32,10 +35,19 @@ const verifyToken = require('./authoMiddleware')
 
 // Middleware
 app.use(cookieParser());
-app.use(cors({
-  origin: "https://a-new-story-frontend.vercel.app/", // Replace with your actual Vercel domain
-  credentials: true, // If you need to send cookies
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY,});

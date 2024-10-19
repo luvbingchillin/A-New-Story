@@ -4,6 +4,7 @@ import normal from '../assets/images/test.jpeg';
 import MatcherCards from './MatcherCards';
 import SquigglyText from './Squigly';
 import { AuthContext } from '../Context/AuthContext';
+import config from '../config';
 
 
 const MatcherInputs = () => {
@@ -52,7 +53,7 @@ const MatcherInputs = () => {
     setLoading(false); // Stop loading
     return;*/}
     try {
-      const recs = await fetch('/api/recommendations',{
+      const recs = await fetch(`${config.backendUrl}/api/recommendations`,{
         method: 'POST',
         headers:{
           'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import {FaTrash} from 'react-icons/fa'
 import { useState } from 'react';
+import config from '../config';
 
 const MyBookCards = ({ bookdata }) => {
     const [isDeleting, setIsDeleting] = useState(false);
@@ -12,7 +13,7 @@ const MyBookCards = ({ bookdata }) => {
       const isbn_10 = book.volumeInfo.industryIdentifiers?.find(id => id.type === 'ISBN_10')?.identifier;
       const isbn_13 = book.volumeInfo.industryIdentifiers?.find(id => id.type === 'ISBN_13')?.identifier;
       try {
-        const response = await fetch('/api/bookshelf',{
+        const response = await fetch(`${config.backendUrl}/api/bookshelf`,{
           method: 'DELETE',
           headers: {
             'Content-Type':'application/json',

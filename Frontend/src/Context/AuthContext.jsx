@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-
+import config from '../config';
 // Create the context
 export const AuthContext = createContext();
 
@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('/api/check-auth', {
+        const response = await fetch(`${config.backendUrl}/api/check-auth`, {
           method: 'GET',
           credentials: 'include', // This ensures that cookies are sent with the request
         });

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import config from '../config';
 
 const BookShelf = ({ refreshTrigger }) => {
   const [books, setBooks] = useState([]);
@@ -7,7 +8,7 @@ const BookShelf = ({ refreshTrigger }) => {
 
   const fetchBooks = async () => {
     try {
-      const bookList = await fetch(`/api/bookshelf/`, {
+      const bookList = await fetch(`${config.backendUrl}/api/bookshelf/`, {
         method: 'GET',
         credentials: 'include',
       });

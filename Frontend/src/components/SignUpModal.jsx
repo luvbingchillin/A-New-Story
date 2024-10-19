@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
+import config from '../config';
 
 const SignUpModal = ({ show, handleClose, setLoggedIn, isLoginMode = false }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -68,7 +69,7 @@ const SignUpModal = ({ show, handleClose, setLoggedIn, isLoginMode = false }) =>
       }
 
       try {
-        const response = await fetch('/api/signup', {
+        const response = await fetch(`${config.backendUrl}/api/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -94,7 +95,7 @@ const SignUpModal = ({ show, handleClose, setLoggedIn, isLoginMode = false }) =>
     } else {
       /// login
       try {
-        const response = await fetch('/api/login', {
+        const response = await fetch(`${config.backendUrl}/api/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
