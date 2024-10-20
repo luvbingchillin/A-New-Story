@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const handleLogout = async () => {
-    await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+    await fetch(`${config.backendUrl}/api/logout`, { method: 'POST', credentials: 'include' });
     setLoggedIn(false);
     window.location.href = '/'; // Optional: Redirect to homepage on logout
   };
