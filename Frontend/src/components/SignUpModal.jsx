@@ -71,6 +71,7 @@ const SignUpModal = ({ show, handleClose, setLoggedIn, isLoginMode = false }) =>
       try {
         const response = await fetch(`${config.backendUrl}/api/signup`, {
           method: 'POST',
+          credentials: "include",
           headers: {
             'Content-Type': 'application/json',
           },
@@ -97,6 +98,7 @@ const SignUpModal = ({ show, handleClose, setLoggedIn, isLoginMode = false }) =>
       try {
         const response = await fetch(`${config.backendUrl}/api/login`, {
           method: 'POST',
+          credentials: "include",
           headers: {
             'Content-Type': 'application/json',
           },

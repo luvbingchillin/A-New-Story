@@ -10,7 +10,6 @@ const MyBooks = () =>{
     const [books, setBooks] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(true);
-    console.log()
     useEffect(()=>{
         fetchbooks()
     },[]);
@@ -30,7 +29,6 @@ const MyBooks = () =>{
             const booksWithImages = await Promise.all(
                 data.map(async(book)=>{
                     const isbn = book.isbn_10;
-                    console.log(isbn)
                     try{
                         const response = await fetch(`${config.backendUrl}/api/search?query=${encodeURIComponent(`isbn:${isbn}`)}`)
                         const Data =  await response.json()
@@ -44,11 +42,13 @@ const MyBooks = () =>{
                     
                 })
             )
+            console.log("data passing down?", booksWithImages)
             setBooks(booksWithImages);
         }
         } catch (error) {
             console.error("Failed to fetch bookshelf data")
         } finally{
+            console.log("data passing down", books)
             setLoading(false);
         }
     }
