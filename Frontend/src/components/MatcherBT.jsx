@@ -53,14 +53,14 @@ const MatcherBT = ({ loggedIn, handleOpenModal }) => {
 
         {loggedIn ? (
           <a href="/matcher">
-            <button className="text-white text-[30px] py-3 px-[50px] bg-[#1E4A1C] text-white py-2 px-6 rounded-full shadow-lg hover:bg-[#245922] focus:outline-none">
+            <button className="shine-button text-white text-[30px] py-3 px-[50px] bg-[#1E4A1C] text-white py-2 px-6 rounded-full shadow-lg hover:bg-[#245922] focus:outline-none">
               Start Matching
             </button>
           </a>
         ) : (
           <button
             onClick={() => handleOpenModal(false)} 
-            className="text-white text-[30px] py-3 px-[50px] bg-[#1E4A1C] text-white py-2 px-6 rounded-full shadow-lg hover:bg-[#245922] focus:outline-none"
+            className=" shine-button text-white text-[30px] py-3 px-[50px] bg-[#1E4A1C] text-white py-2 px-6 rounded-full shadow-lg hover:bg-[#245922] focus:outline-none"
           >
             Sign Up
           </button>

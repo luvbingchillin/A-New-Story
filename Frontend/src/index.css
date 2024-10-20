@@ -88,3 +88,70 @@ body {
 .spin-out {
   animation: spin-and-delete 1s ease-in forwards;
 }
+
+/* styles.css */
+
+.shine-button {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.shine-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  pointer-events: none; /* Allows clicks to pass through the pseudo-element */
+}
+
+.shine-button:hover {
+  transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+.shine-button:hover::after {
+  animation: shine 0.75s;
+}
+
+@keyframes shine {
+  0% {
+    left: -75%;
+  }
+  100% {
+    left: 125%;
+  }
+}
+
+
+.loginbutton .gradient-text {
+  color: white;
+  transition: background-position 0.5s ease, color 0.5s ease;
+}
+
+/* On hover, apply the gradient to the text */
+.loginbutton:hover .gradient-text {
+  background: linear-gradient(90deg, #b78642, #000000, #c9a750);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text; /* For Safari */
+  color: transparent;
+  -webkit-text-fill-color: transparent; /* For Safari */
+  background-position: 0% 50%;
+  animation: gradient-move 0.8s forwards;
+}
+
+/* Animate the gradient movement */
+@keyframes gradient-move {
+  to {
+    background-position: 100% 50%;
+  }
+}

@@ -10,7 +10,6 @@ const MyBooks = () =>{
     const [books, setBooks] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(true);
-    console.log()
     useEffect(()=>{
         fetchbooks()
     },[]);
@@ -30,7 +29,6 @@ const MyBooks = () =>{
             const booksWithImages = await Promise.all(
                 data.map(async(book)=>{
                     const isbn = book.isbn_10;
-                    console.log(isbn)
                     try{
                         const response = await fetch(`${config.backendUrl}/api/search?query=${encodeURIComponent(`isbn:${isbn}`)}`)
                         const Data =  await response.json()
@@ -44,16 +42,20 @@ const MyBooks = () =>{
                     
                 })
             )
+            console.log("data passing down?", booksWithImages)
             setBooks(booksWithImages);
         }
         } catch (error) {
             console.error("Failed to fetch bookshelf data")
         } finally{
+            console.log("data passing down", books)
             setLoading(false);
         }
     }
 
-    return(loading ? (<div className="flex items-center justify-center min-h-screen bg-[#F4F1EA]"><ClipLoader color="#3498db" size={150} /></div>): errorMessage ? (<div>{errorMessage}</div>):(<div className="w-screen min-h-screen bg-[#F4F1EA] px-8">
+    return(loading ? (<div className="flex items-center justify-center min-h-screen bg-[#F4F1EA]"><ClipLoader color="#3498db" size={150} /></div>)
+    : errorMessage ? (<div className="flex items-center justify-center min-h-screen bg-[#F4F1EA] text-[70px]">{errorMessage}</div>)
+    :(<div className="w-screen min-h-screen bg-[#F4F1EA] px-8">
     
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-10 gap-6 ">
         {books.map((book, index)=>(

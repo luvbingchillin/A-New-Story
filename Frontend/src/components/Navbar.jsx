@@ -54,9 +54,9 @@ const Navbar = ({ loggedIn, handleOpenModal, transparent, handleLogout }) => {
             <button
               onClick={() => handleOpenModal(true)} 
               //arrow function (() => handleOpenModal(true)) ensures that the function handleOpenModal(true) is only executed when the click event occurs?
-              className="bg-[#1E4A1C] text-white py-2 px-5 rounded-full text-xl shadow-lg hover:bg-[#245922] focus:outline-none"
+              className="loginbutton bg-[#1E4A1C] text-white py-2 px-5 rounded-full text-xl shadow-lg hover:bg-[#245922] focus:outline-none"
             >
-              Log In
+              <span className="gradient-text">Login</span>
             </button>
           )}
         </div>
