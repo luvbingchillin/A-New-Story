@@ -37,7 +37,13 @@ const verifyToken = require('./authoMiddleware')
 app.use(cookieParser());
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -64,7 +70,7 @@ app.get('/api/search', async (req, res) => {
   try {
     // Make a request to the Google Books API with filters
     const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}&printType=books&maxResults=40&orderBy=relevance&key=${process.env.GOOGLE_BOOKS_API_KEY}`);
-    console.log("response data",query, response.data)
+    console.log(response.data)
     res.json(response.data);
   } catch (error) {
     console.error('Error fetching data from Google Books API:', error.message);
@@ -134,20 +140,20 @@ app.post('/api/login', async (req,res)=>{
 
     const payload = {userId: user.id, userName: user.username };
     // create tokens that can be deconded to store id and username
-    const accessToken =  jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:'2h'})
+    const accessToken =  jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:'12h'})
     const refreshToken =  jwt.sign(payload, process.env.JWT_SECRET,{expiresIn:'7d'})
     // refreshing api to be implemented later
     res.cookie('accessToken', accessToken,{
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: 'Lax',
-      maxAge: 60 * 60 * 1000 *2
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      maxAge: 60 * 60 * 1000 *12
     })
 
     res.cookie('refreshToken', refreshToken,{
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: 'Strict',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
       maxAge: 7 * 24* 60 * 60 * 1000
     })
 
