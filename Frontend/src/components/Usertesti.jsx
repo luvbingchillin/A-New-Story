@@ -18,24 +18,24 @@ const Usertesti = () => {
 
   const testimonials = [
     {
-      title: 'Magdalena & Annie',
-      content: `I had just gotten out of a relationship, and Annie had just started dating women so we were both nervous and treading lightly for a little bit! We both fell hard and fast and knew we had found our person fairly quickly.`,
+      title: 'Annie',
+      content: `Thanks to Shelfwise, I can confidently walk in a bookstore, grab the perfect book, and pretend I always knew it was a masterpiece. My friends think I’m a reading genius, and I’m okay with that. `,
     },
     {
-      title: 'Shannon & Julian',
-      content: `I was feeling lonely back in my hometown because most of my friends had started romantic relationships while I was abroad. We both decided to download Tinder and see what happened.`,
+      title: 'Leo',
+      content: `It's kinda neat i guess`,
     },
     {
-      title: 'Courtney & Miranda',
-      content: `Thanks to Tinder I have found the love of my life and we are to be married. After going on a few dates and having a few fun nights I came across Miranda.`,
+      title: 'Darius',
+      content: `Thanks to this i have found enlightenment and inner peace. Wow amazing`,
     },
     {
-      title: 'Alex & Jamie',
-      content: `We connected on Tinder and instantly hit it off. We’ve been together ever since, and I couldn't imagine my life without Jamie!`,
+      title: 'Alex',
+      content: `It's like tinder and goodreads but weirder`,
     },
     {
-      title: 'Chris & Taylor',
-      content: `We met on Tinder and we are so thankful for the app bringing us together. We now share our lives and have never been happier.`,
+      title: 'Chris',
+      content: `10/10 will try again. I’ve discovered so many great books that now my bookshelf is judging me for not reading fast enough`,
     },
   ];
 

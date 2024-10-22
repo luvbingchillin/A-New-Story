@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../assets/images/love-books.png';
+import logo from '../assets/images/logo-no-background.png';
 import { Link } from 'react-router-dom';
 
 
