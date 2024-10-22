@@ -90,7 +90,7 @@ const MatcherInputs = () => {
   
     if(direction === "left"){
       try {
-        const addToShelf = await fetch('api/addtoBS',{
+        const addToShelf = await fetch(`${config.backendUrl}/api/addtoBS`,{
           method:'POST',
           headers:{
             'Content-type':'application/json',
