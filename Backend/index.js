@@ -224,8 +224,13 @@ app.get('/api/bookshelf', verifyToken, async (req, res) => {
 });
 
 app.post('/api/logout', (req, res) => {
-  res.clearCookie('accessToken');
-  res.clearCookie('refreshToken');
+  res.clearCookie('accessToken',
+    {secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',});
+  res.clearCookie('refreshToken',{
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+  });
   res.status(200).json({ message: 'Logged out successfully' });
   
 });
